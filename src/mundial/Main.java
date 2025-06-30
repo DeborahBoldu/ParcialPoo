@@ -1,105 +1,149 @@
-// Main.java
+
+// src/mundial/Main.java
 package mundial;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * Programa principal centrado únicamente en la simulación de los partidos del Mundial,
+ * con penales en caso de empate en fase eliminatoria.
+ */
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        // --- 1) FASE DE GRUPOS ---
-        System.out.println("=== Fase de Grupos ===");
-        System.out.print("Ingrese nombre del Grupo: ");
-        String nombreGrupo = sc.nextLine().trim();
-        System.out.print("¿Cuántos equipos tiene el grupo? ");
-        int numEquipos = Integer.parseInt(sc.nextLine().trim());
-
-        // Lee nombres de equipos
-        List<Equipo> equipos = new ArrayList<>();
-        for (int i = 1; i <= numEquipos; i++) {
-            System.out.print("Nombre del equipo " + i + ": ");
-            equipos.add(new Equipo(sc.nextLine().trim()));
+        // 1. Definir los 32 equipos
+        List<String> nombres = List.of(
+                "Qatar","Ecuador","Senegal","PaisesBajos",
+                "Inglaterra","Iran","EstadosUnidos","Gales",
+                "Argentina","ArabiaSaudita","Mexico","Polonia",
+                "Francia","Australia","Dinamarca","Tunez",
+                "España","CostaRica","Alemania","Japon",
+                "Belgica","Canada","Marruecos","Croacia",
+                "Brasil","Serbia","Suiza","Cameroon",
+                "Portugal","Ghana","Uruguay","CoreaSur"
+        );
+        List<Equipo> allTeams = new ArrayList<>();
+        for (String nombre : nombres) {
+            allTeams.add(new Equipo(nombre));
         }
 
-        // Crear Grupo y generar  los partidos
-        Grupo grupo = new Grupo(nombreGrupo);
-        for (int i = 0; i < equipos.size(); i++) {
-            for (int j = i + 1; j < equipos.size(); j++) {
-                grupo.agregarPartido(new Partido(equipos.get(i), equipos.get(j)));
+        // 2. Fase de Grupos (A–H)
+        List<Grupo> grupos = new ArrayList<>();
+        Random rnd = new Random();
+        Date fechaGrupo = new Date();
+
+        for (int gi = 0; gi < 8; gi++) {
+            char grupoChar = (char) ('A' + gi);
+            List<Equipo> eqs = allTeams.subList(gi * 4, gi * 4 + 4);
+
+            Grupo g = new Grupo("Grupo " + grupoChar);
+            g.generarFixture(eqs, fechaGrupo);
+            for (Partido p : g.getPartidos()) {
+                Resultado res = new Resultado(rnd.nextInt(5), rnd.nextInt(5));
+                p.setResultado(res);
             }
+            grupos.add(g);
         }
 
-        // Registrar resultados
-        System.out.println("\n--- Registro de Resultados de Grupo " + nombreGrupo + " ---");
-        for (Partido p : grupo.getPartidos()) {
-            System.out.println("Partido: " + p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre());
-            System.out.print("  Goles " + p.getEquipoA().getNombre() + ": ");
-            int golesA = Integer.parseInt(sc.nextLine().trim());
-            System.out.print("  Goles " + p.getEquipoB().getNombre() + ": ");
-            int golesB = Integer.parseInt(sc.nextLine().trim());
-            p.registrarResultado(golesA, golesB);
-        }
-
-        // Mostrar tabla y clasificados
-        System.out.println();
-        grupo.mostrarTabla();
-        List<Equipo> clasificados = grupo.obtenerClasificados();
-        System.out.println(">>> Clasificados de Grupo " + nombreGrupo + ": " + clasificados);
-        System.out.println();
-
-        // --- 2) FASE ELIMINATORIA ---
-        System.out.println("=== Fase Eliminatoria ===");
-        System.out.print("¿Cuántas llaves (rondas) desea registrar? ");
-        int numLlaves = Integer.parseInt(sc.nextLine().trim());
-
-        // Para cada llave, crear partidos, registrar resultados y mostrar ganadores
-        for (int i = 1; i <= numLlaves; i++) {
-            System.out.print("\nNombre de la Llave " + i + ": ");
-            String nombreLlave = sc.nextLine().trim();
-            Llave llave = new Llave(nombreLlave);
-
-            System.out.print("¿Cuántos partidos hay en " + nombreLlave + "? ");
-            int numPartidos = Integer.parseInt(sc.nextLine().trim());
-
-            // Leer cada partido: permite usar clasificados u otros equipos
-            for (int j = 1; j <= numPartidos; j++) {
-                System.out.print("Equipo A del partido " + j + ": ");
-                String nomA = sc.nextLine().trim();
-                System.out.print("Equipo B del partido " + j + ": ");
-                String nomB = sc.nextLine().trim();
-
-                Equipo equipoA = buscarOCrearEquipo(nomA, equipos);
-                Equipo equipoB = buscarOCrearEquipo(nomB, equipos);
-
-                Partido p = new Partido(equipoA, equipoB);
-                System.out.print("  Goles " + equipoA.getNombre() + ": ");
-                int gA = Integer.parseInt(sc.nextLine().trim());
-                System.out.print("  Goles " + equipoB.getNombre() + ": ");
-                int gB = Integer.parseInt(sc.nextLine().trim());
-                p.registrarResultado(gA, gB);
-
-                llave.agregarPartido(p);
-            }
-
-            // Mostrar ganadores de la llave
+        // 3. Mostrar resultados de grupos y clasificados
+        Map<String, List<Equipo>> avanzan = new LinkedHashMap<>();
+        for (Grupo g : grupos) {
+            System.out.println("=== " + g.getDescripcionEtapa() + " ===");
+            g.getResumenResultados().forEach(System.out::println);
+            List<Equipo> clas = g.getEquiposQueAvanzan();
+            avanzan.put(g.getDescripcionEtapa(), clas);
+            System.out.println("Clasificados: " +
+                    clas.stream()
+                            .map(Equipo::getNombre)
+                            .collect(Collectors.joining(", ")));
             System.out.println();
-            llave.mostrarGanadores();
         }
 
-        sc.close();
+        // 4. Fases eliminatorias con penales en caso de empate
+        List<Equipo> participantes = avanzan.values().stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        octavosCuartosSemisFinal(participantes, rnd);
+    }
+
+    private static void octavosCuartosSemisFinal(List<Equipo> equipos, Random rnd) {
+        Date fecha = new Date();
+
+        // Octavos
+        Llave octavos = new Llave("Octavos");
+        prepararLlaveConPenales(octavos, equipos, fecha, rnd);
+        mostrarEtapa(octavos);
+
+        // Cuartos
+        Llave cuartos = new Llave("Cuartos");
+        prepararLlaveConPenales(cuartos, octavos.getEquiposQueAvanzan(), fecha, rnd);
+        mostrarEtapa(cuartos);
+
+        // Semifinales
+        Llave semi = new Llave("Semifinales");
+        prepararLlaveConPenales(semi, cuartos.getEquiposQueAvanzan(), fecha, rnd);
+        mostrarEtapa(semi);
+
+        // Final
+        Llave finalE = new Llave("Final");
+        prepararLlaveConPenales(finalE, semi.getEquiposQueAvanzan(), fecha, rnd);
+        mostrarEtapa(finalE);
     }
 
     /**
-     * Busca en la lista un Equipo por nombre; si no existe, lo crea y lo añade.
+     * Prepara una fase eliminatoria:
+     * - Simula un partido; si hay empate, decide por penales.
      */
-    private static Equipo buscarOCrearEquipo(String nombre, List<Equipo> lista) {
-        for (Equipo e : lista) {
-            if (e.getNombre().equalsIgnoreCase(nombre)) {
-                return e;
-            }
+    private static void prepararLlaveConPenales(Llave llave, List<Equipo> equipos, Date fecha, Random rnd) {
+        List<Equipo> ordenados = new ArrayList<>(equipos);
+        Collections.shuffle(ordenados, rnd);
+
+        // Si la lista es impar, damos un bye al último equipo
+        if (ordenados.size() % 2 != 0) {
+            Equipo bye = ordenados.remove(ordenados.size() - 1);
+            System.err.println("Aviso: número impar de equipos (" + equipos.size() +
+                    "). " + bye.getNombre() + " avanza con bye.");
         }
-        Equipo nuevo = new Equipo(nombre);
-        lista.add(nuevo);
-        return nuevo;
+
+        // Recorremos pares completos: i + 1 siempre < ordenados.size()
+        for (int i = 0; i + 1 < ordenados.size(); i += 2) {
+            Equipo local = ordenados.get(i);
+            Equipo visitante = ordenados.get(i + 1);
+
+            // 1) Resultado en tiempo reglamentario
+            int gL = rnd.nextInt(5), gV = rnd.nextInt(5);
+            Resultado res = new Resultado(gL, gV);
+
+            // 2) Si empatan, definimos ganador a penales y ajustamos marcador
+            if (res.empate()) {
+                boolean ganaLocal = rnd.nextBoolean();
+                String ganador = ganaLocal ? local.getNombre() : visitante.getNombre();
+                System.out.printf("%tF – %s %d:%d %s → empate, gana en penales: %s%n",
+                        fecha,
+                        local.getNombre(), gL, gV, visitante.getNombre(),
+                        ganador);
+                // Ajustamos gol de desempate
+                if (ganaLocal) res = new Resultado(gL + 1, gV);
+                else          res = new Resultado(gL, gV + 1);
+            } else {
+                // Partido sin penales
+                System.out.printf("%tF – %s %d:%d %s%n",
+                        fecha,
+                        local.getNombre(), gL, gV, visitante.getNombre());
+            }
+
+            Partido p = new Partido(fecha, local, visitante, res);
+            llave.addPartido(p);
+        }
+    }
+
+    private static void mostrarEtapa(EtapaMundial etapa) {
+        System.out.println("\n=== " + etapa.getDescripcionEtapa() + " ===");
+        etapa.getResumenResultados().forEach(System.out::println);
+        System.out.println("Avanzan: " +
+                etapa.getEquiposQueAvanzan().stream()
+                        .map(Equipo::getNombre)
+                        .collect(Collectors.joining(", ")));
     }
 }
+
