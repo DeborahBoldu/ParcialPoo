@@ -12,4 +12,17 @@ public class Equipo {
     public String getNombre(){
         return nombre;
     }
+
+    public int getPuntos(){
+        return puntos;
+    }
+
+    public void sumarPuntos(int pts){
+        this.puntos += pts;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + "("+ puntos +" pts)";
+    }
 }
