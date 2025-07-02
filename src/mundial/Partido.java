@@ -37,4 +37,3 @@ public class Partido {
                 visitante.getNombre());
     }
 }
-
