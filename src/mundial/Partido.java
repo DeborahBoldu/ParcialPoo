@@ -1,46 +1,39 @@
 package mundial;
+import java.util.Date;
+
 
 public class Partido {
-    private final Equipo equipoA;
-    private final Equipo equipoB;
+    private Date fecha;
+    private Equipo local;
+    private Equipo visitante;
     private Resultado resultado;
 
-    public Partido(Equipo equipoA, Equipo equipoB) {
-        this.equipoA = equipoA;
-        this.equipoB = equipoB;
+    public Partido(Date fecha, Equipo local, Equipo visitante, Resultado resultado) {
+        this.fecha = fecha;
+        this.local = local;
+        this.visitante = visitante;
+        this.resultado = resultado;
+        this.local.addPartido(this);
+        this.visitante.addPartido(this);
     }
 
-    public Equipo getEquipoA() {
-        return equipoA;
-    }
+    public Date getFecha() { return fecha; }
+    public Equipo getLocal() { return local; }
+    public Equipo getVisitante() { return visitante; }
+    public Resultado getResultado() { return resultado; }
 
-    public Equipo getEquipoB() {
-        return equipoB;
-    }
-
-    public void registrarResultado(int golesA, int golesB) {
-        this.resultado = new Resultado(golesA, golesB);
-        asignarPuntos();
-    }
-
-    private void asignarPuntos() {
-        if (resultado.esVictoriaA()) {
-            equipoA.sumarPuntos(3);
-        } else if (resultado.esVictoriaB()) {
-            equipoB.sumarPuntos(3);
-        } else {
-            equipoA.sumarPuntos(1);
-            equipoB.sumarPuntos(1);
-        }
-    }
-
-    public Resultado getResultado() {
-        return resultado;
+    /** Permite actualizar el resultado tras la simulación. */
+    public void setResultado(Resultado resultado) {
+        this.resultado = resultado;
     }
 
     @Override
     public String toString() {
-        String marcador = (resultado != null ? " → " + resultado : "");
-        return equipoA.getNombre() + " vs " + equipoB.getNombre() + marcador;
+        return String.format("%tF – %s %d:%d %s",
+                fecha,
+                local.getNombre(),
+                resultado.getGolesLocal(),
+                resultado.getGolesVisitante(),
+                visitante.getNombre());
     }
 }
