@@ -1,40 +1,48 @@
 package mundial;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
-public class Grupo {
-    private final String nombre;
-    private final List<Partido> partidos = new ArrayList<>();
+/**
+ * Modelo de un equipo participante.
+ */
+public class Equipo {
+    private String nombre;
+    private List<Partido> partidosJugados;
 
-    public Grupo(String nombre){
+    public Equipo(String nombre) {
         this.nombre = nombre;
+        this.partidosJugados = new ArrayList<>();
     }
 
-    public void agregarPartido(Partido partido){
-        partidos.add(partido);
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public void addPartido(Partido p) {
+        partidosJugados.add(p);
     }
 
-    /**
-     * Devuelve los dos equipos con más puntos
-     * (suponiendo que no hay empates en puntos)
-     */
-
-    public List<Equipo> obtenerClasificados(){
-        return partidos.stream()
-                .flatMap(p -> Stream.of(p.getEquipoA(), p.getEquipoB()))
-                .distinct()
-                .sorted(Comparator.comparingInt(Equipo::getPuntos).reversed())
-                .limit(2)
-                .collect(Collectors.toList());
+    public List<Partido> getPartidosJugados() {
+        return Collections.unmodifiableList(partidosJugados);
     }
 
-    public void mostrarTabla() {
-        System.out.println("=== Grupo" + nombre + "===");
-        partidos.stream()
-                .flatMap(p -> Stream.of(p.getEquipoA(), p.getEquipoB()))
-                .distinct()
-                .sorted(Comparator.comparingInt(Equipo::getPuntos).reversed())
-                .forEach(e -> System.out.println(e));
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Equipo)) return false;
+        Equipo eq = (Equipo) o;
+        return Objects.equals(nombre, eq.nombre);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre);
+    }
+
+    @Override
+    public String toString() {
+        return "Equipo{" + "nombre='" + nombre + '\'' + '}';
     }
 }
