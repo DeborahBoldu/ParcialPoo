@@ -1,4 +1,3 @@
-// src/mundial/EtapaMundial.java
 package mundial;
 
 import java.util.List;

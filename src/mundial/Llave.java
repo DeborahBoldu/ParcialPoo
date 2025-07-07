@@ -1,4 +1,3 @@
-// src/mundial/Llave.java
 package mundial;
 
 import java.util.List;

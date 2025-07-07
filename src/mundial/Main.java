@@ -1,5 +1,3 @@
-
-// src/mundial/Main.java
 package mundial;
 
 import java.util.*;
