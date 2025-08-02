@@ -1,13 +1,7 @@
 @startuml
-class mundial.Llave {
-+ <<Create>> Llave(String)
-+ List<Equipo> getEquiposQueAvanzan()
-}
-
 abstract class mundial.EtapaMundial {
 # String descripcionEtapa
 # List<Partido> partidos
-+ <<Create>> EtapaMundial(String)
 + String getDescripcionEtapa()
 + void addPartido(Partido)
 + List<Partido> getPartidos()
@@ -18,38 +12,18 @@ abstract class mundial.EtapaMundial {
 
 
 class mundial.Grupo {
-+ <<Create>> Grupo(String)
 + void generarFixture(List<Equipo>,Date)
 + List<Equipo> getEquiposQueAvanzan()
 }
 
-class mundial.Equipo {
-+ <<Create>> Equipo(String)
-+ String getNombre()
-+ void setNombre(String)
-+ void addPartido(Partido)
-+ List<Partido> getPartidosJugados()
-+ boolean equals(Object)
-+ int hashCode()
-+ String toString()
-}
 
-class mundial.Main {
-+ {static} void main(String[])
-}
-
-class mundial.Partido {
-+ <<Create>> Partido(Date,Equipo,Equipo,Resultado)
-+ Date getFecha()
-+ Equipo getLocal()
-+ Equipo getVisitante()
-+ Resultado getResultado()
-+ void setResultado(Resultado)
-+ String toString()
+class mundial.Llave {
++ List<Equipo> getEquiposQueAvanzan()
 }
 
 class mundial.Resultado {
-+ <<Create>> Resultado(int,int)
+- int golesLocal
+- int golesVisitante
 + int getGolesLocal()
 + int getGolesVisitante()
 + boolean ganoLocal()
@@ -60,6 +34,44 @@ class mundial.Resultado {
 
 
 
-mundial.EtapaMundial <|-- mundial.Llave
+class mundial.Equipo {
+- String nombre
+- List<Partido> partidosJugados
++ String getNombre()
++ void setNombre(String)
++ void addPartido(Partido)
++ List<Partido> getPartidosJugados()
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+
+
+class mundial.Partido {
+- Date fecha
+- Equipo local
+- Equipo visitante
+- Resultado resultado
++ Date getFecha()
++ Equipo getLocal()
++ Equipo getVisitante()
++ Resultado getResultado()
++ void setResultado(Resultado)
++ String toString()
+}
+
+
+class mundial.Main {
++ {static} void main(String[])
+- {static} void octavosCuartosSemisFinal(List<Equipo>,Random)
+- {static} void prepararLlaveConPenales(Llave,List<Equipo>,Date,Random)
+- {static} void mostrarEtapa(EtapaMundial)
+}
+
+
+
 mundial.EtapaMundial <|-- mundial.Grupo
+mundial.EtapaMundial <|-- mundial.Llave
+
+
 @enduml
