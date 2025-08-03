@@ -3,10 +3,7 @@ package mundial;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Programa principal centrado únicamente en la simulación de los partidos del Mundial,
- * con penales en caso de empate en fase eliminatoria.
- */
+
 public class Main {
     public static void main(String[] args) {
         // 1. Definir los 32 equipos
@@ -88,10 +85,7 @@ public class Main {
         mostrarEtapa(finalE);
     }
 
-    /**
-     * Prepara una fase eliminatoria:
-     * - Simula un partido; si hay empate, decide por penales.
-     */
+
     private static void prepararLlaveConPenales(Llave llave, List<Equipo> equipos, Date fecha, Random rnd) {
         List<Equipo> ordenados = new ArrayList<>(equipos);
         Collections.shuffle(ordenados, rnd);

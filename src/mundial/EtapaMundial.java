@@ -21,23 +21,16 @@ public abstract class EtapaMundial {
         return Collections.unmodifiableList(partidos);
     }
 
-    /**
-     * Método protegido para permitir que subclases agreguen partidos.
-     */
+
     protected void agregarPartido(Partido partido) {
         partidos.add(partido);
     }
 
-    /**
-     * Método protegido para permitir que subclases recorran los partidos.
-     */
+
     protected List<Partido> getPartidosInternos() {
         return partidos;
     }
 
-    /**
-     * Devuelve resumen de resultados de los partidos jugados.
-     */
     public List<String> getResumenResultados() {
         return partidos.stream()
                 .map(p -> String.format("%tF – %s %d:%d %s",
