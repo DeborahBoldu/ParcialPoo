@@ -17,13 +17,18 @@ public class Partido {
         this.visitante.addPartido(this);
     }
 
-    public Date getFecha() { return fecha; }
-    public Equipo getLocal() { return local; }
-    public Equipo getVisitante() { return visitante; }
-    public Resultado getResultado() { return resultado; }
+    public Date getFecha() {
+        return fecha; }
+    public Equipo getLocal() {
+        return local; }
+    public Equipo getVisitante() {
+        return visitante; }
+    public Resultado getResultado() {
+        return resultado; }
 
-    /** Permite actualizar el resultado tras la simulación. */
-    public void setResultado(Resultado resultado) {
+
+    public void setResultado(Resultado resultado) {         //Actualizar resultado
+
         this.resultado = resultado;
     }
 
