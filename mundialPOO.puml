@@ -21,6 +21,19 @@ class mundial.Llave {
 + List<Equipo> getEquiposQueAvanzan()
 }
 
+class mundial.Partido {
+- Date fecha
+- Equipo local
+- Equipo visitante
+- Resultado resultado
++ Date getFecha()
++ Equipo getLocal()
++ Equipo getVisitante()
++ Resultado getResultado()
++ void setResultado(Resultado)
++ String toString()
+}
+
 class mundial.Resultado {
 - int golesLocal
 - int golesVisitante
@@ -47,18 +60,7 @@ class mundial.Equipo {
 }
 
 
-class mundial.Partido {
-- Date fecha
-- Equipo local
-- Equipo visitante
-- Resultado resultado
-+ Date getFecha()
-+ Equipo getLocal()
-+ Equipo getVisitante()
-+ Resultado getResultado()
-+ void setResultado(Resultado)
-+ String toString()
-}
+
 
 
 class mundial.Main {
@@ -72,6 +74,7 @@ class mundial.Main {
 
 mundial.EtapaMundial <|-- mundial.Grupo
 mundial.EtapaMundial <|-- mundial.Llave
+
 
 
 @enduml
