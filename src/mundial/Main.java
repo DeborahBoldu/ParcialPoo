@@ -131,7 +131,8 @@ public class Main {
             }
 
             Partido p = new Partido(fecha, local, visitante, res);
-            llave.addPartido(p);
+            llave.agregarPartido(p);
+
         }
     }
 
@@ -141,7 +142,6 @@ public class Main {
         System.out.println("Avanzan: " +
                 etapa.getEquiposQueAvanzan().stream()
                         .map(Equipo::getNombre)
-                        .collect(Collectors.joining(", ")));
+                        .collect(Collectors.joining(", ")));
     }
 }
-

@@ -1,55 +1,8 @@
 @startuml
-abstract class mundial.EtapaMundial {
-# String descripcionEtapa
-# List<Partido> partidos
-+ String getDescripcionEtapa()
-+ void addPartido(Partido)
-+ List<Partido> getPartidos()
-+ List<String> getResumenResultados()
-+ {abstract}List<Equipo> getEquiposQueAvanzan()
-+ String toString()
-}
-
-
-class mundial.Grupo {
-+ void generarFixture(List<Equipo>,Date)
-+ List<Equipo> getEquiposQueAvanzan()
-}
-
-
-class mundial.Llave {
-+ List<Equipo> getEquiposQueAvanzan()
-}
-
-class mundial.Partido {
-- Date fecha
-- Equipo local
-- Equipo visitante
-- Resultado resultado
-+ Date getFecha()
-+ Equipo getLocal()
-+ Equipo getVisitante()
-+ Resultado getResultado()
-+ void setResultado(Resultado)
-+ String toString()
-}
-
-class mundial.Resultado {
-- int golesLocal
-- int golesVisitante
-+ int getGolesLocal()
-+ int getGolesVisitante()
-+ boolean ganoLocal()
-+ boolean ganoVisitante()
-+ boolean empate()
-+ String toString()
-}
-
-
-
 class mundial.Equipo {
 - String nombre
 - List<Partido> partidosJugados
++ <<Create>> Equipo(String)
 + String getNombre()
 + void setNombre(String)
 + void addPartido(Partido)
@@ -60,8 +13,10 @@ class mundial.Equipo {
 }
 
 
-
-
+class mundial.Llave {
++ <<Create>> Llave(String)
++ List<Equipo> getEquiposQueAvanzan()
+}
 
 class mundial.Main {
 + {static} void main(String[])
@@ -70,11 +25,56 @@ class mundial.Main {
 - {static} void mostrarEtapa(EtapaMundial)
 }
 
+abstract class mundial.EtapaMundial {
+- String descripcionEtapa
+- List<Partido> partidos
++ <<Create>> EtapaMundial(String)
++ String getDescripcionEtapa()
++ List<Partido> getPartidos()
+# void agregarPartido(Partido)
+# List<Partido> getPartidosInternos()
++ List<String> getResumenResultados()
++ {abstract}List<Equipo> getEquiposQueAvanzan()
++ String toString()
+}
 
 
-mundial.EtapaMundial <|-- mundial.Grupo
+class mundial.Grupo {
++ <<Create>> Grupo(String)
++ void generarFixture(List<Equipo>,Date)
++ List<Equipo> getEquiposQueAvanzan()
+}
+
+class mundial.Resultado {
+- int golesLocal
+- int golesVisitante
++ <<Create>> Resultado(int,int)
++ int getGolesLocal()
++ int getGolesVisitante()
++ boolean ganoLocal()
++ boolean ganoVisitante()
++ boolean empate()
++ String toString()
+}
+
+
+class mundial.Partido {
+- Date fecha
+- Equipo local
+- Equipo visitante
+- Resultado resultado
++ <<Create>> Partido(Date,Equipo,Equipo,Resultado)
++ Date getFecha()
++ Equipo getLocal()
++ Equipo getVisitante()
++ Resultado getResultado()
++ void setResultado(Resultado)
++ String toString()
+}
+
+
+
+
 mundial.EtapaMundial <|-- mundial.Llave
-
-
-
+mundial.EtapaMundial <|-- mundial.Grupo
 @enduml

@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public abstract class EtapaMundial {
-    protected String descripcionEtapa;
-    protected List<Partido> partidos;
+    private String descripcionEtapa;
+    private List<Partido> partidos;
 
     public EtapaMundial(String descripcionEtapa) {
         this.descripcionEtapa = descripcionEtapa;
@@ -18,16 +17,26 @@ public abstract class EtapaMundial {
         return descripcionEtapa;
     }
 
-    public void addPartido(Partido partido) {
-        partidos.add(partido);
-    }
-
     public List<Partido> getPartidos() {
         return Collections.unmodifiableList(partidos);
     }
 
     /**
-     * Resumen de resultados de partidos
+     * Método protegido para permitir que subclases agreguen partidos.
+     */
+    protected void agregarPartido(Partido partido) {
+        partidos.add(partido);
+    }
+
+    /**
+     * Método protegido para permitir que subclases recorran los partidos.
+     */
+    protected List<Partido> getPartidosInternos() {
+        return partidos;
+    }
+
+    /**
+     * Devuelve resumen de resultados de los partidos jugados.
      */
     public List<String> getResumenResultados() {
         return partidos.stream()
