@@ -23,9 +23,7 @@ package mundial;
 
         @Override
         public String toString() {
-            return "Resultado{" +
-                    "golesLocal=" + golesLocal +
-                    ", golesVisitante=" + golesVisitante + '}';
+            return "Resultado{" + "golesLocal=" + golesLocal + ", golesVisitante=" + golesVisitante + '}';
         }
 
 }
