@@ -11,7 +11,7 @@ public class Llave extends EtapaMundial {
     @Override
     public List<Equipo> getEquiposQueAvanzan() {
         List<Equipo> ganadores = new ArrayList<>();
-        for (Partido p : getPartidosInternos()) { // ← corregido aquí
+        for (Partido p : getPartidosInternos()) {
             Resultado r = p.getResultado();
             if (r.ganoLocal()) ganadores.add(p.getLocal());
             else if (r.ganoVisitante()) ganadores.add(p.getVisitante());
