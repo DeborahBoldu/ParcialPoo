@@ -6,30 +6,24 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.Date;
 
-/**
- * Fase de grupos
- */
+
 public class Grupo extends EtapaMundial {
 
     public Grupo(String descripcionEtapa) {
         super(descripcionEtapa);
     }
 
-    /**
-     * Genera el fixture.
-     */
+
     public void generarFixture(List<Equipo> equipos, Date fechaComun) {
         for (int i = 0; i < equipos.size(); i++) {
             for (int j = i + 1; j < equipos.size(); j++) {
                 Partido p = new Partido(fechaComun, equipos.get(i), equipos.get(j), new Resultado(0, 0));
-                this.agregarPartido(p); // usa método protegido
+                this.agregarPartido(p);
             }
         }
     }
 
-    /**
-     * Equipos que avanzan según puntaje.
-     */
+
     @Override
     public List<Equipo> getEquiposQueAvanzan() {
         Map<Equipo, Integer> puntos = new HashMap<>();
@@ -51,7 +45,7 @@ public class Grupo extends EtapaMundial {
         }
 
         return puntos.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())) // de mayor a menor
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
                 .limit(2) // los dos primeros
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
