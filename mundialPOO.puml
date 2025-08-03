@@ -80,4 +80,5 @@ class mundial.Main {
 
 mundial.EtapaMundial <|-- mundial.Grupo
 mundial.EtapaMundial <|-- mundial.Llave
+
 @enduml
