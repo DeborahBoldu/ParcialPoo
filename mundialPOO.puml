@@ -80,5 +80,8 @@ class mundial.Main {
 
 mundial.EtapaMundial <|-- mundial.Grupo
 mundial.EtapaMundial <|-- mundial.Llave
+mundial.EtapaMundial *-- mundial.Partido : se conforma de
+mundial.Partido --- mundial.Equipo : participa de
+Partido "1..1" --- "1..1" Resultado : corresponde a
 
 @enduml
